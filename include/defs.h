@@ -18,9 +18,11 @@
 
 #endif
 
-#define DISPLAY_DATA_DEBUG 1 // if enabled, data will be displayed on the serial monitor
-#define FSM_COUNTER_DEBUG 1
-
+// comment these before launch
+// #define DISPLAY_DATA_DEBUG 1 // if enabled, data will be displayed on the serial monitor
+#define FSM_COUNTER_DEBUG 1 // this is used to simulate the finite state machine
+// #define MQTT_TEST_DEBUG 1   
+// #define TRANSMIT_TELEMETRY_DEBUG 1
 /* end of debug parameters */
 
 /* timing constant */
@@ -45,8 +47,8 @@
 #define MQTT_PORT 1883
 
 /* WIFI credentials */
-const char* SSID = "iPIC-WIRELESS";
-const char* PASSWORD = "987654321jica";
+const char* SSID = "Gakibia-Unit3";
+const char* PASSWORD = "password";
 
 /* ROCKET FLIGHT STATES */
 #define PRE_FLIGHT          0

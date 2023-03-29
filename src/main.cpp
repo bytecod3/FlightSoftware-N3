@@ -214,6 +214,7 @@ void readGyroscope(void* pvParameters){
     }
 }
 
+#ifdef DISPLAY_DATA_DEBUG
 void displayData(void* pvParameters){
    while(true){
        struct Acceleration_Data gyroscope_buffer;
@@ -242,7 +243,9 @@ void displayData(void* pvParameters){
        delay(10);
    }
 }
+#endif
 
+#ifdef TRANSMIT_TELEMETRY_DEBUG
 void transmitTelemetry(void* pvParameters){
     /* This function sends data to the ground station */
 
@@ -288,6 +291,11 @@ void transmitTelemetry(void* pvParameters){
 }
 
 void reconnect(){
+    /**
+     * This function is used to re-establish connection to the MQTT server during flight
+     * in case of a broken connection
+     * 
+    */
 
     while(!mqtt_client.connected()){
         debug("[..]Attempting MQTT connection...");
@@ -301,6 +309,9 @@ void reconnect(){
     }
 }
 
+#endif
+
+#ifdef MQTT_TEST_DEBUG
 void testMQTT(void *pvParameters){
     while(true){
         debugln("Publishing data");
@@ -311,6 +322,7 @@ void testMQTT(void *pvParameters){
         }
     }
 }
+#endif
 
 void counter_update(void* pvParameters){
     /* DEBUG
@@ -336,12 +348,7 @@ void counter_update(void* pvParameters){
 
 void flight_state_check(void* pvParameters){
     /* Test the Finite State Machine that will be used to notify ground station about flight events */
-    long previous_time = 0;
-    long current_time = 0;
-    
-    long interval = 4000;
-    int state = 0;
-
+ 
     while(true){
         int32_t flight_state;
 
@@ -511,6 +518,7 @@ void setup(){
         }
     #endif
 
+    #ifdef MQTT_TEST_DEBUG
     /* TASK 4: TRANSMIT TELEMETRY DATA */
     if(xTaskCreate(
             transmitTelemetry,
@@ -524,6 +532,7 @@ void setup(){
     }else{
         debugln("[+]Transmit task created success");
     }
+    #endif
 
     // if(xTaskCreate(
     //         testMQTT,
@@ -570,12 +579,14 @@ void setup(){
 
 void loop(){
 
-   if(!mqtt_client.connected()){
-       /* try to reconnect if connection is lost */
-       reconnect();
-   }
+    #ifdef MQTT_TEST_DEBUG
+    if(!mqtt_client.connected()){
+        /* try to reconnect if connection is lost */
+        reconnect();
+    }
 
-   mqtt_client.loop();
+    mqtt_client.loop();
+    #endif
 
 
 }
